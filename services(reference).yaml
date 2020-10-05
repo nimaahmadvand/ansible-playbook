@@ -1,0 +1,30 @@
+---
+
+- hosts: kube
+  become: yes
+
+  
+  
+
+  tasks:
+    - name: install httpd (RedHat)
+      yum: name=httpd state=present
+    - name: write the apache config file
+    	template: src=/srv/httpd.conf.j2 dest=/etc/httpd.conf
+    - name: ensure that httpd is started and enabled
+    	service: name=httpd state=started enabled=yes
+    - name: restart httpd
+    	service: name=httpd state=restarted
+    - name: reload httpd
+    	service: name=httpd state=reloaded
+    - name: stop and disable httpd
+    	service: name=httpd state=stopped enabled=no
+    	
+    	
+    	
+    	
+    - name: start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes

@@ -1,0 +1,79 @@
+---
+
+- hosts: kube
+  become: yes
+
+  
+  
+
+  tasks:
+    - name: apt update
+      apt: update_cache=yes
+      when: ansible_os_family == "Debian"
+      
+    - name: install apache2 (Debian)
+    	apt: name=apache2 state=present
+    	when: ansible_os_family == "Debian"
+    	
+    - name: install httpd (RedHat)
+    	yum: name=httpd state=present
+    	when: ansible_os_family == "RedHat"
+    	
+    - name: update apache2
+    	apt: name=apache2 state=latest
+    	when: ansible_os_family == "Debian"
+    	
+    - name: uninstall apache2
+    	apt: name= apache2 state=absent
+    	when: ansible_os_family == "Debian"
+    	
+    	
+    	
+    	
+    - name: apt update
+      apt:
+        update_cache: yes
+    
+    - name: install apache2 (Debian)
+      apt:
+        name: apache2
+        state: present
+        
+    - name: install httpd (RedHat)
+      yum:
+        name: httpd
+        state: present
+        
+
+    - name: Install a list of packages (Debian)
+      apt:
+        pkg:
+        - foo
+        - foo-tools
+        - bar
+        	
+    - name: Install a list of packages (RedHat)
+      yum:
+        name:
+          - foo
+          - foo-tools
+          - bar
+        state: present
+        
+
+    - name: Update all packages to their latest version (Debian)
+      apt:
+        name: "*"
+        state: latest
+        
+    - name: Upgrade all packages, excluding kernel & foo related packages (RedHat)
+      yum:
+        name: "*"
+        state: latest
+        exclude: kernel*,foo*
+        
+        
+    - name: Install the 'Development tools' package group (RedHat)
+      yum:
+        name: "@Development tools"
+        state: present

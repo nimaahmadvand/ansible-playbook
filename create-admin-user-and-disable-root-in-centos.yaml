@@ -1,0 +1,32 @@
+---
+
+- hosts: centos
+  become: yes
+
+
+
+  tasks:
+    - name: Add admin group
+      group:
+        name: admin
+        state: present
+
+    - name: Add admin user (default password: admin)
+      user:
+        name: admin
+        password: "{{ 'admin' | password_hash('sha512') }}"
+        group: admin
+        shell: /bin/bash
+        home: /home/admin
+        create_home: yes
+        state: present
+        groups: wheel
+        append: yes
+
+    - name: Force admin to change password at login
+      shell: passwd --expire admin
+
+    - name: Disable root user
+      user:
+        name: root
+        shell: /sbin/nologin
